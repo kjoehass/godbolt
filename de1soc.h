@@ -151,4 +151,32 @@ typedef struct {
 ******************************************************************************/
 #define JP2_IRQ    12
 
+#define TIMER1_BASE (PERIPH_BASE +0x2000) /* Base of Interval Timer 1 */
+#define TIMER2_BASE (PERIPH_BASE +0x2020) /* Base of Interval Timer 2 */
+/******************************************************************************
+* Interval Timer Registers
+******************************************************************************/
+typedef struct {
+  __IO uint32_t Status;       /* RUN and TO status bits              */
+  __IO uint32_t Control;      /* STOP, START, CONT, ITO control bits */
+  __IO uint32_t StartLow;     /* Low half-word of start value        */
+  __IO uint32_t StartHigh;    /* High half-word of start value       */
+  __IO uint32_t SnapshotLow;  /* Low half-word of timer snapshot     */
+  __IO uint32_t SnapshotHigh; /* High half-word of timer snapshot    */
+} Timer_Type;
+
+#define Timer1               ((Timer_Type *) TIMER1_BASE)   
+#define Timer2               ((Timer_Type *) TIMER2_BASE)   
+/******************************************************************************
+* Interval Timer Constants
+******************************************************************************/
+#define TIMER1_IRQ    72
+#define TIMER2_IRQ    74
+#define TIMEOUT       (1 << 0)
+#define RUN           (1 << 1)
+#define INTERRUPTTO   (1 << 0)
+#define CONTINUOUS    (1 << 1)
+#define START         (1 << 2)
+#define STOP          (1 << 3)
+
 #endif
