@@ -151,8 +151,8 @@ typedef struct {
 ******************************************************************************/
 #define JP2_IRQ    12
 
-#define TIMER1_BASE (PERIPH_BASE +0x2000) /* Base of Interval Timer 1 */
-#define TIMER2_BASE (PERIPH_BASE +0x2020) /* Base of Interval Timer 2 */
+#define TIMER1_BASE (PERIPH_BASE+0x2000) /* Base of Interval Timer 1 */
+#define TIMER2_BASE (PERIPH_BASE+0x2020) /* Base of Interval Timer 2 */
 /******************************************************************************
 * Interval Timer Registers
 ******************************************************************************/
@@ -178,5 +178,29 @@ typedef struct {
 #define CONTINUOUS    (1 << 1)
 #define START         (1 << 2)
 #define STOP          (1 << 3)
+
+#define UART_BASE (PERIPH_BASE+0x1000) /* Base of UART */
+/******************************************************************************
+* UART Registers
+******************************************************************************/
+typedef struct {
+  __IO uint32_t Data;
+  __IO uint32_t Control;
+} UART_Type;
+
+#define UART               ((UART_Type *) UART_BASE)   
+/******************************************************************************
+* UART Constants
+******************************************************************************/
+#define UART_IRQ      80
+#define DATA_MSK      (0xF << 0)
+#define RVALID        (1 << 15)
+#define RAVAIL_MSK    (0xFF << 16)
+#define RCV_INT_ENBL  (1 << 0)
+#define WRT_INT_ENBL  (1 << 1)
+#define RCV_INT_PEND  (1 << 8)
+#define WRT_INT_PEND  (1 << 9)
+#define AC            (1 << 10)
+#define WSPACE_MSK    (0xFF << 16)
 
 #endif
