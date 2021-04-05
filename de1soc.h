@@ -193,7 +193,7 @@ typedef struct {
 * UART Constants
 ******************************************************************************/
 #define UART_IRQ      80
-#define DATA_MSK      (0xF << 0)
+#define DATA_MSK      (0xFF << 0)
 #define RVALID        (1 << 15)
 #define RAVAIL_MSK    (0xFF << 16)
 #define RCV_INT_ENBL  (1 << 0)
