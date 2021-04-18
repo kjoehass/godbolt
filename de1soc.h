@@ -37,13 +37,10 @@ typedef unsigned long int  uint64_t;
 #define  __O   volatile       /* Defines 'write only' permissions     */
 #define  __IO  volatile       /* Defines 'read / write' permissions   */
 
-
 /*
    Define the fixed address for the peripherals that are supported by the
    CPUlator simulation of an Altera (Intel) DE1 SOC board.
 */
-
-
 #define PERIPH_BASE ((uint32_t)0xFF200000)  /* Peripherals start address */
 
 #define LEDS_BASE   (PERIPH_BASE +0x0000)   /* Base of LEDs registers */
@@ -203,4 +200,106 @@ typedef struct {
 #define AC            (1 << 10)
 #define WSPACE_MSK    (0xFF << 16)
 
+
+#define GIC_INTERFACE_BASE   (0xFFFEC100)
+#define GIC_DISTRIBUTOR_BASE (0xFFFED000)
+
+/**************************************************************************//**
+ * @file     core_ca.h
+ * @brief    CMSIS Cortex-A Core Peripheral Access Layer Header File
+ * @version  V1.0.3
+ * @date     28. January 2020
+ ******************************************************************************/
+/*
+ * Copyright (c) 2009-2020 ARM Limited. All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the License); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#define RESERVED(N, T) T RESERVED##N; // placeholder for "reserved" areas
+
+/*
+   Structure type to access the Generic Interrupt Controller Distributor (GICD)
+*/
+typedef struct
+{
+  __IO uint32_t CTLR;            // Distributor Control Register
+  __I  uint32_t TYPER;           // Interrupt Controller Type Register
+  __I  uint32_t IIDR;            // Distributor Implementer ID Register
+  RESERVED(0, uint32_t)
+  __IO uint32_t STATUSR;         // Error Reporting Status Register, optional
+  RESERVED(1[11], uint32_t)
+  __O  uint32_t SETSPI_NSR;      // Set SPI Register
+  RESERVED(2, uint32_t)
+  __O  uint32_t CLRSPI_NSR;      // Clear SPI Register
+  RESERVED(3, uint32_t)
+  __O  uint32_t SETSPI_SR;       // Set SPI, Secure Register
+  RESERVED(4, uint32_t)
+  __O  uint32_t CLRSPI_SR;       // Clear SPI, Secure Register
+  RESERVED(5[9], uint32_t)
+  __IO uint32_t IGROUPR[32];     // Interrupt Group Registers
+  __IO uint32_t ISENABLER[32];   // Interrupt Set-Enable Registers
+  __IO uint32_t ICENABLER[32];   // Interrupt Clear-Enable Registers
+  __IO uint32_t ISPENDR[32];     // Interrupt Set-Pending Registers
+  __IO uint32_t ICPENDR[32];     // Interrupt Clear-Pending Registers
+  __IO uint32_t ISACTIVER[32];   // Interrupt Set-Active Registers
+  __IO uint32_t ICACTIVER[32];   // Interrupt Clear-Active Registers
+  __IO uint32_t IPRIORITYR[255]; // Interrupt Priority Registers
+  RESERVED(6, uint32_t)
+  __IO uint32_t ITARGETSR[255];  // Interrupt Targets Registers
+  RESERVED(7, uint32_t)
+  __IO uint32_t ICFGR[64];       // Interrupt Configuration Registers
+  __IO uint32_t IGRPMODR[32];    // Interrupt Group Modifier Registers
+  RESERVED(8[32], uint32_t)
+  __IO uint32_t NSACR[64];       // Non-secure Access Control Registers
+  __O  uint32_t SGIR;            // Software Generated Interrupt Register
+  RESERVED(9[3], uint32_t)
+  __IO uint32_t CPENDSGIR[4];    // SGI Clear-Pending Registers
+  __IO uint32_t SPENDSGIR[4];    // SGI Set-Pending Registers
+  __IO uint64_t IROUTER[988];    // Interrupt Routing Registers
+}  GICDistributor_Type;
+
+//GIC Distributor register set access pointer
+#define GICDistributor ((GICDistributor_Type *) GIC_DISTRIBUTOR_BASE )
+
+/*
+   Structure type to access the Generic Interrupt Controller Interface (GICC)
+*/
+typedef struct
+{
+  __IO uint32_t CTLR;         // CPU Interface Control Register
+  __IO uint32_t PMR;          // Interrupt Priority Mask Register
+  __IO uint32_t BPR;          // Binary Point Register
+  __I  uint32_t IAR;          // Interrupt Acknowledge Register
+  __O  uint32_t EOIR;         // End Of Interrupt Register
+  __I  uint32_t RPR;          // Running Priority Register
+  __I  uint32_t HPPIR;        // Highest Priority Pending Interrupt Register
+  __IO uint32_t ABPR;         // Aliased Binary Point Register
+  __I  uint32_t AIAR;         // Aliased Interrupt Acknowledge Register
+  __O  uint32_t AEOIR;        // Aliased End Of Interrupt Register
+  __I  uint32_t AHPPIR;       // Aliased Highest Priority Pending Interrupt Reg
+  __IO uint32_t STATUSR;      // Error Reporting Status Register, optional
+  RESERVED(1[40], uint32_t)
+  __IO uint32_t APR[4];       // Active Priority Register
+  __IO uint32_t NSAPR[4];     // Non-secure Active Priority Register
+  RESERVED(2[3], uint32_t)
+  __I  uint32_t IIDR;         // CPU Interface Identification Register
+  RESERVED(3[960], uint32_t)
+  __O  uint32_t DIR;          // Deactivate Interrupt Register
+}  GICInterface_Type;
+
+//GIC Interface register set access pointer
+#define GICInterface ((GICInterface_Type *) GIC_INTERFACE_BASE )
 #endif
