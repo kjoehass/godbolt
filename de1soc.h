@@ -203,6 +203,8 @@ typedef struct {
 
 #define GIC_INTERFACE_BASE   (0xFFFEC100)
 #define GIC_DISTRIBUTOR_BASE (0xFFFED000)
+#define SVC_MODE             (0x13)
+#define IRQ_MODE             (0x12)
 
 /**************************************************************************//**
  * @file     core_ca.h
@@ -302,4 +304,73 @@ typedef struct
 
 //GIC Interface register set access pointer
 #define GICInterface ((GICInterface_Type *) GIC_INTERFACE_BASE )
+
+/**************************************************************************//**
+ * @file     cmsis_gcc.h
+ * @brief    CMSIS compiler specific macros, functions, instructions
+ * @version  V1.3.0
+ * @date     17. December 2019
+ ******************************************************************************/
+/*
+ * Copyright (c) 2009-2019 Arm Limited. All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the License); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#define __ASM                 __asm
+#define __INLINE              inline
+#define __FORCEINLINE         __attribute__((always_inline))
+#define __STATIC_INLINE       static inline
+#define __STATIC_FORCEINLINE  __attribute__((always_inline)) static inline
+
+/*
+  Enable IRQ Interrupts
+  Enables IRQ interrupts by clearing the I-bit in the CPSR.
+  Can only be executed in Privileged modes.
+ */
+__STATIC_FORCEINLINE void __enable_irq(void)
+{
+  __ASM volatile ("cpsie i" : : : "memory");
+}
+
+/*
+  Disable IRQ Interrupts
+  Disables IRQ interrupts by setting the I-bit in the CPSR.
+  Can only be executed in Privileged modes.
+ */
+__STATIC_FORCEINLINE  void __disable_irq(void)
+{
+  __ASM volatile ("cpsid i" : : : "memory");
+}
+
+/*
+  Set Mode
+  [in]    mode  Mode value to set
+ */
+__STATIC_FORCEINLINE void __set_mode(uint32_t mode)
+{
+  __ASM volatile("MSR  cpsr_c, %0" : : "r" (mode) : "memory");
+}
+
+/*
+  Set Stack Pointer
+  [in]    stack  Stack Pointer value to set
+ */
+__STATIC_FORCEINLINE void __set_SP(uint32_t stack)
+{
+  __ASM volatile("MOV  sp, %0" : : "r" (stack) : "memory");
+}
+
 #endif
